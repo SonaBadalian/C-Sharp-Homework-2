@@ -1,0 +1,93 @@
+using System;
+
+class nKnights
+{
+    static void Main()
+    {
+        int[,] chessboard = new int[8, 8];
+        int[,] template = {
+            {2, 3, 4, 4, 4, 4, 3, 2},
+            {3, 4, 6, 6, 6, 6, 4, 3},
+            {4, 6, 8, 8, 8, 8, 6, 4},
+            {4, 6, 8, 8, 8, 8, 6, 4},
+            {4, 6, 8, 8, 8, 8, 6, 4},
+            {4, 6, 8, 8, 8, 8, 6, 4},
+            {3, 4, 6, 6, 6, 6, 4, 3},
+            {2, 3, 4, 4, 4, 4, 3, 2}
+        };
+
+        Console.WriteLine("Enter the starting position for the knight:");
+
+        Console.Write("Enter the row (0-7): ");
+        int startRow = int.Parse(Console.ReadLine());
+
+        Console.Write("Enter the column (0-7): ");
+        int startCol = int.Parse(Console.ReadLine());
+
+        chessboard[startRow, startCol] = 1;
+
+        int[] rowMoves = { -2, -1, 1, 2, 2, 1, -1, -2 };
+        int[] colMoves = { 1, 2, 2, 1, -1, -2, -2, -1 };
+
+        int totalMoves = 1;
+        bool noMoreMoves = false;
+
+        while (!noMoreMoves)
+        {
+            int minMoves = int.MaxValue;
+            int nextRow = -1, nextCol = -1;
+
+            for (int i = 0; i < 8; i++)
+            {
+                int newRow = startRow + rowMoves[i];
+                int newCol = startCol + colMoves[i];
+
+                if (IsValidMove(newRow, newCol) && chessboard[newRow, newCol] == 0 && template[newRow, newCol] < minMoves)
+                {
+                    minMoves = template[newRow, newCol];
+                    nextRow = newRow;
+                    nextCol = newCol;
+                }
+            }
+
+            if (nextRow != -1 && nextCol != -1)
+            {
+                totalMoves++;
+                chessboard[nextRow, nextCol] = totalMoves;
+                startRow = nextRow;
+                startCol = nextCol;
+            }
+            else
+            {
+                noMoreMoves = true;
+            }
+        }
+
+         Console.WriteLine("\nTemplate:");
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                Console.Write($"{template[i, j],-3}");
+            }
+            Console.WriteLine();
+        }
+
+        Console.WriteLine("\nFinal Knight's Tour:");
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                Console.Write($"{chessboard[i, j],-3}");
+            }
+            Console.WriteLine();
+        }
+
+        Console.WriteLine("\nTotal Moves: " + totalMoves);
+    }
+
+    static bool IsValidMove(int row, int col)
+    {
+        return row >= 0 && row < 8 && col >= 0 && col < 8;
+    }
+}
